@@ -5,7 +5,7 @@ def search_spotify(q):
     market='BE'
     limit=5
     response = app.spotify.search(q=q, type=type, market=market, limit=limit)
-    result=[]
+    result={}
     for track in response['tracks']['items']:
         name=track["name"]
         id = track["id"]
@@ -14,6 +14,6 @@ def search_spotify(q):
         for artist in track["artists"]:
             artists.append(artist['name'])
 
-        result.append({"id": id, "name": name, "artists": ",".join(artists), "uri": uri})
+        result[id]={"id": id, "name": name, "artists": ",".join(artists), "uri": uri}
 
     return result

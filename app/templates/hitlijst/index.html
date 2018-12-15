@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="ui grid container">
+        <div class="eight wide computer sixteen wide mobile centered column">
+            <h2 class="ui dividing header">Titel</h2>
+
+            {% from "macros/formhelpers.html" import render_field %}
+            <form method=post>
+              <dl>
+                  {{ form.csrf_token }}
+                  {{ render_field(form.searchfield) }}
+                  {{ render_field(form.submit) }}
+              </dl>
+              <p>
+            </form>
+            <div class="container">
+                {% for track in tracks %}
+                <div class="row">
+                    <div class="col-sm">
+                        <a href="{{track.uri}}">{{track.name}}</a>
+                    </div>
+                    <div class="col-sm">
+                        {{track.artists}}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -5,28 +5,58 @@
             <h2 class="ui dividing header">Titel</h2>
 
             {% from "macros/formhelpers.html" import render_field %}
-            <form method=post>
+            <form method=post id="search_form">
               <dl>
-                  {{ form.csrf_token }}
-                  {{ render_field(form.searchfield) }}
-                  {{ render_field(form.submit) }}
+                  {{ search_form.csrf_token }}
+                  {{ render_field(search_form.naam) }}
+                  {{ render_field(search_form.searchfield) }}
+                  {{ render_field(search_form.submit) }}
               </dl>
               <p>
             </form>
-            <div class="container">
-                {% for track in tracks %}
-                <div class="row">
-                    <div class="col-sm">
-                        <a href="{{track.uri}}">{{track.name}}</a>
+
+            <div class="container-fluid">
+                <form method=post id="song_form">
+                    {{ song_form.csrf_token }}
+                    {{ song_form.song_id }}
+                    <!-- COLUMN WITH SEARCH RESULTS -->
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+
+                            <div class="container-fluid">
+                                {% for track in tracks %}
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        <a href="{{track.uri}}">{{track.name}}</a>
+                                    </div>
+                                    <div class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                                        {{track.artists}}
+                                    </div>
+                                     <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                                         <a href='javascript:formSubmit("{{track.id}}")' id="{{track.id}}">>></a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <!-- COLUMN WITH SELECTION-->
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            D R I E
+                        </div>
                     </div>
-                    <div class="col-sm">
-                        {{track.artists}}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+                </form>
 
             </div>
         </div>
     </div>
+
+<script>
+    function formSubmit(song_id)
+    {
+      document.getElementById("song_form").song_id.value = song_id;
+      document.getElementById("song_form").submit();
+    }
+</script>
+
 {% endblock %}
+

@@ -8,11 +8,12 @@ def search_spotify(q):
     result=[]
     for track in response['tracks']['items']:
         name=track["name"]
+        id = track["id"]
         uri = track["uri"]
         artists = []
         for artist in track["artists"]:
             artists.append(artist['name'])
 
-        result.append({"name": name, "artists": ",".join(artists), "uri": uri})
+        result.append({"id": id, "name": name, "artists": ",".join(artists), "uri": uri})
 
     return result

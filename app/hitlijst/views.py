@@ -31,14 +31,14 @@ def index():
     tracks={}
     if request.method == 'POST' and search_form.validate() and not song_form.song_id.data:
         tracks=search_spotify(search_form.searchfield.data)
-        print tracks
         session['tracks']=tracks
-        naam = search_form.naam.data
-        db_naam = User.query.filter_by(first_name=naam).first()
-        if not db_naam:
-            db_naam = User(first_name=naam)
-        db.session.add(db_naam)
-        db.session.commit()
+
+        user = User.query.filter_by(first_name=search_form.naam.data).first()
+        if not user:
+            user = User(first_name=search_form.naam.data)
+            db.session.add(user)
+            db.session.commit()
+        session['user_id']=user.id
 
     if request.method == 'POST' and song_form.validate() and song_form.song_id.data:
         print song_form.song_id.data
@@ -48,6 +48,15 @@ def index():
             song = Song(id=song_form.song_id.data, name=chosen_song['name'], artists=chosen_song['artists'], uri=chosen_song['uri'])
             db.session.add(song)
             db.session.commit()
+
+        user=User.query.filter_by(id=session['user_id']).first()
+        user_choise = UserChoice.query.filter_by(user_id=user.id, song_id=song.id).first()
+        if not user_choise:
+            user_choise = UserChoice(user_id=user.id, song_id=song.id)
+            user_choise.rank=user.song_choices_count()
+            db.session.add(user_choise)
+            db.session.commit()
+
         tracks=session['tracks']
 
     return render_template('hitlijst/index.html', search_form=search_form, song_form=song_form, tracks=tracks)
